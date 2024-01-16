@@ -1,0 +1,45 @@
+@import "~bootstrap/scss/bootstrap";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  color:  #fefae0;
+  min-height: 100vh;
+  background-color: white;
+  .title {
+    background-color: #606C5D;
+  }
+
+  header{
+    padding: 12px;
+  }
+  
+  main {
+    
+    .container{
+      
+      width: 100%;
+      .row{
+        color:  #283618;
+        .projects {
+          
+          padding: 12px;
+          border: 2px solid black;
+          border-right: 1px solid black;
+          background-color: #F7E6C4;
+        }
+        .tasks {
+          padding: 12px;
+          border: 2px solid black;
+          border-left: 1px solid black;
+          background-color: #F1C376;
+        }
+      }
+    }
+  }
+}
+
+
