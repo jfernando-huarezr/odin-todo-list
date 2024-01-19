@@ -2,6 +2,7 @@ import * as bootstrap from 'bootstrap'
 import ProjectList from './projectList'
 import Project from './project'
 import Task from './task'
+import domManipulation from './domManipulation'
 
 const headerHeight = document.querySelector('header').offsetHeight
 const main = document.querySelector('main')
@@ -62,12 +63,14 @@ taskForm.addEventListener('submit', function(event) {
   taskForm.reset();
   console.log('submited task')
 
-  //domManipulation.drawTasks()
+  //domManipulation.drawTasks(projectList, project)
 
 });
 
 projectForm.addEventListener('submit', function(event) {
   event.preventDefault();
+
+  
 
   const input = projectForm.querySelector("input")
   const project = new Project(input.value)
@@ -78,6 +81,8 @@ projectForm.addEventListener('submit', function(event) {
   projectForm.reset();
   console.log('submited project')
   
-  //domManipulation.drawProjects()
-  //domManipulation.drawProjectOptions()
+  domManipulation.drawProjects(projectList)
+  domManipulation.drawProjectOptions(projectList)
+
+  
 });

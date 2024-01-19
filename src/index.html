@@ -23,16 +23,32 @@
       <div class="row pt-2">
         <div class="projects col-4">
           <h3>Projects</h3>
-          <ul>
-
-          </ul>
-
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProjectModal">
             +Project
           </button>
+          <ul class="pt-3">
+
+          </ul>
+
+          
         </div>
         <div class="tasks col-8">
           <h3>Tasks</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Importance</th>
+                <th scope="col">Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+             
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -42,7 +58,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new task</h1>
+          <h1 class="modal-title fs-5" id="addTaskLabel">Add a new task</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form id="task-form" action="#">
@@ -73,9 +89,6 @@
             <div class="mb-3">
               <label for="project" class="form-label">Add this task for the project:</label>
               <select required class="form-select" id="projectSelect" aria-label="select project">
-                <!-- <option selected value="1">Work</option>
-                <option value="2">Odin Project</option>
-                <option value="3">Camping</option> -->
               </select>
             </div>
           </div>
@@ -93,7 +106,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new Project</h1>
+          <h1 class="modal-title fs-5" id="addProjectLabel">Add a new Project</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form id="project-form" action="#">
