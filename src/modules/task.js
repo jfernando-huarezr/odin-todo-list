@@ -7,24 +7,44 @@ export default class Task {
     this.status = false
   }
 
-  changeName(name) {
+  setName(name) {
     this.name = name
   }
 
-  changeDescription(description) {
+  setDescription(description) {
     this.description = description
   }
 
-  changeDate(date) {
+  setDate(date) {
     this.date = date
   }
 
-  changeImportance(importance) {
+  setImportance(importance) {
     this.importance = importance
   }
 
-  changeStatus() {
+  setStatus() {
     this.status = !this.status
+  }
+
+  getName() {
+    return this.name
+  }
+
+  getDescription() {
+    return this.description
+  }
+
+  getDate() {
+    return this.date
+  }
+
+  getImportance() {
+    return this.importance
+  }
+
+  getStatus() {
+    return this.status
   }
 
 }

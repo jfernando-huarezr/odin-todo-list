@@ -21,8 +21,8 @@ const addTaskModal = document.getElementById('addTaskModal')
 const addProjectModal = document.getElementById('addProjectModal')
 
 //bootstrap modal so i can close them after hitting submit
-const myModal1 = new bootstrap.Modal(document.getElementById('addProjectModal'), {}); // creating modal object
-const myModal2 = new bootstrap.Modal(document.getElementById('addTaskModal'), {}); // creating modal object
+const projectModal = new bootstrap.Modal(document.getElementById('addProjectModal'), {}); // creating modal object
+const taskModal = new bootstrap.Modal(document.getElementById('addTaskModal'), {}); // creating modal object
 
 //to store all the projects
 
@@ -39,7 +39,11 @@ addProjectModal.addEventListener('hidden.bs.modal', function () {
 taskForm.addEventListener('submit', function(event) {
   event.preventDefault();
 
+  console.log(event.target)
+
   const inputs = taskForm.querySelectorAll("input")
+  const submitButton = taskForm.querySelector('#send-task')
+  console.log(submitButton.textContent)
 
   let taskName = ""
   let taskDescription = ""
@@ -55,13 +59,26 @@ taskForm.addEventListener('submit', function(event) {
     }
   })
 
-  const task = new Task(taskName, taskDescription, taskDate, taskImportance)
   const project = PROJECT_LIST.searchProject(taskProjectIndex)
 
-  project.addTask(task)
+  if (submitButton.textContent === 'Add') {
+    const task = new Task(taskName, taskDescription, taskDate, taskImportance)
+    project.addTask(task)
+  }
+
+  else {
+    const taskIndex = submitButton.getAttribute('data-task')
+    const currentTask = project.getTasks()[taskIndex]
+
+    currentTask.setName(taskName)
+    currentTask.setDescription(taskDescription)
+    currentTask.setDate(taskDate)
+    currentTask.setImportance(taskImportance)
+  }
+  
 
 
-  myModal2.hide(); // hide modal
+  taskModal.hide(); // hide modal
   taskForm.reset();
   console.log('submited task')
   domManipulation.drawTasks(taskProjectIndex)
@@ -74,9 +91,8 @@ projectForm.addEventListener('submit', function(event) {
   const input = projectForm.querySelector("input")
   const project = new Project(input.value)
   PROJECT_LIST.addProject(project)
-  console.log(PROJECT_LIST)
 
-  myModal1.hide(); // hide modal
+  projectModal.hide(); // hide modal
   projectForm.reset();
   console.log('submited project')
   
@@ -85,5 +101,34 @@ projectForm.addEventListener('submit', function(event) {
 
   
 });
+
+addTaskModal.addEventListener('show.bs.modal', (e) => {
+  console.log('modal triggered!')
+
+  const element = e.relatedTarget
+  console.log(element)
+
+  const modalTitle = addTaskModal.querySelector('#addTaskLabel')
+  const modalSubmit = addTaskModal.querySelector('#send-task')
+  const project = taskForm.querySelector("select#projectSelect").parentElement
+
+  if (element.classList.contains('task-new')) {
+    modalTitle.textContent = 'Add new Task'
+    modalSubmit.textContent = 'Add'
+    project.style.display = 'block'
+
+  } else {
+
+    const taskIndex = element.getAttribute('data-task');
+    const projectIndex = element.getAttribute('data-project')
+
+    modalTitle.textContent = 'Edit Task'
+    modalSubmit.setAttribute('data-task', taskIndex)
+    modalSubmit.setAttribute('data-project', projectIndex)
+    modalSubmit.textContent = 'Edit'
+    project.style.display = 'none'
+  }
+
+})
 
 domManipulation.taskListEventListener()

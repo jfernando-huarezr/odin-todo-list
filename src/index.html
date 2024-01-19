@@ -11,7 +11,7 @@
     <div class="container d-flex justify-content-between align-items-center">
       <h1 class="text-center">TO DO LIST</h1>
       <div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+        <button type="button" class="btn btn-primary task-new" data-bs-toggle="modal" data-bs-target="#addTaskModal">
           +Task
         </button>
       </div>
@@ -80,9 +80,9 @@
             <div class="mb-3">
               <label for="taskImportance" class="form-label">Task importance</label>
               <select required class="form-select" id="taskImportance" aria-label="select project">
-                <option selected value="0">Low</option>
-                <option value="1">Medium</option>
-                <option value="2">High</option>
+                <option selected value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
               </select>
             </div>
 
@@ -94,7 +94,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Add task</button>
+            <button id="send-task"  type="submit" class="btn btn-primary">Add task</button>
           </div>
         </form>
         

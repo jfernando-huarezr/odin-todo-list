@@ -58,10 +58,10 @@ export default class domManipulation {
       const row = document.createElement('tr')
       row.innerHTML = `
         <th scope="row">${index+1}</th>
-        <td>${element.name}</td>
-        <td>${element.date}</td>
-        <td>${element.importance}</td>
-        <td data-task="${index}">${element.status}</td>
+        <td class="taskName" style="text-decoration-line: ${element.status ? "line-through" : "none"}">${element.name}</td>
+        <td class="taskDate">${element.date}</td>
+        <td class="taskImportance">${element.importance}</td>
+        <td class="taskStatus" data-project="${projectIndex}" data-task="${index}" style="color: ${element.status ? "green" : "red"}">${element.status ? "Completed" : "Pending"}</td>
         <td data-task="${index}">
           <button class="btn-icon task-details" data-project="${projectIndex}" data-task="${index}"><i class="fa-solid fa-magnifying-glass"></i></button>
           <button class="btn-icon task-update ps-2" data-bs-toggle="modal" data-bs-target="#addTaskModal" data-project="${projectIndex}" data-task="${index}"><i  class="fa-solid fa-pen-to-square"></i></button>
@@ -100,11 +100,44 @@ export default class domManipulation {
 
         if (targetElement.classList.contains('task-details')) {
           
-        } else if (targetElement.classList.contains('task-update')) {
-          
-        } else if (targetElement.classList.contains('task-delete')) {
+        } 
+        
+        else if (targetElement.classList.contains('task-update')) {
+        
+          const taskForm = document.getElementById('task-form')
+          const task = currentProject.searchTask(taskIndex)
+
+          const inputs = taskForm.querySelectorAll("input")
+
+          taskForm.querySelector("select#taskImportance").value = task.getImportance()
+          taskForm.querySelector("select#projectSelect").value = projectIndex
+
+          inputs.forEach(element => {
+            switch (element.id) {
+              case "taskName": element.value = task.getName(); break;
+              case 'taskDescription': element.value = task.getDescription(); break;
+              case 'taskDate': element.value = task.getDate() ; break;
+            }
+          })  
+        } 
+        
+        else if (targetElement.classList.contains('task-delete')) {
           currentProject.deleteTask(taskIndex)
           this.drawTasks(projectIndex);
+        }
+
+        return
+      }
+
+      if (targetElement.tagName.toLowerCase() === 'td') {
+        if (targetElement.classList.contains('taskStatus')) {
+
+          const taskIndex = targetElement.getAttribute('data-task');
+          const projectIndex = targetElement.getAttribute('data-project')
+          const currentProject = PROJECT_LIST.getList()[projectIndex]
+          const task = currentProject.getTasks()[taskIndex]
+          task.setStatus()
+          this.drawTasks(projectIndex)       
         }
       }
     });
