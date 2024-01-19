@@ -7,12 +7,12 @@ export default class ProjectList {
     this.projectList.push(project)
   }
 
-  deleteProject(project) {
+  deleteProject(index) {
     
   }
 
-  searchProject(project) {
-    return this.projectList.find(element => element.name === project);
+  searchProject(index) {
+    return this.projectList[index];
   }
 
   getList() {

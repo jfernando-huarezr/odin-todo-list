@@ -1,8 +1,9 @@
 import * as bootstrap from 'bootstrap'
-import ProjectList from './projectList'
 import Project from './project'
 import Task from './task'
 import domManipulation from './domManipulation'
+
+import { PROJECT_LIST } from './projectStorage'
 
 const headerHeight = document.querySelector('header').offsetHeight
 const main = document.querySelector('main')
@@ -15,6 +16,7 @@ main.classList.add('d-flex', 'align-items-center')
 const taskForm = document.getElementById('task-form')
 const projectForm = document.getElementById('project-form')
 
+
 const addTaskModal = document.getElementById('addTaskModal')
 const addProjectModal = document.getElementById('addProjectModal')
 
@@ -23,7 +25,7 @@ const myModal1 = new bootstrap.Modal(document.getElementById('addProjectModal'),
 const myModal2 = new bootstrap.Modal(document.getElementById('addTaskModal'), {}); // creating modal object
 
 //to store all the projects
-const projectList = new ProjectList()
+
 
 addTaskModal.addEventListener('hidden.bs.modal', function () {
   taskForm.reset();
@@ -42,8 +44,8 @@ taskForm.addEventListener('submit', function(event) {
   let taskName = ""
   let taskDescription = ""
   let taskDate = ""
-  const taskImportance = taskForm.querySelector("select#taskImportance option:checked").text
-  const taskProjectName= taskForm.querySelector("select#projectSelect option:checked" ).text
+  const taskImportance = taskForm.querySelector("select#taskImportance option:checked").value
+  const taskProjectIndex = taskForm.querySelector("select#projectSelect option:checked" ).value
 
   inputs.forEach(element => {
     switch (element.id) {
@@ -54,7 +56,7 @@ taskForm.addEventListener('submit', function(event) {
   })
 
   const task = new Task(taskName, taskDescription, taskDate, taskImportance)
-  const project = projectList.searchProject(taskProjectName)
+  const project = PROJECT_LIST.searchProject(taskProjectIndex)
 
   project.addTask(task)
 
@@ -62,27 +64,26 @@ taskForm.addEventListener('submit', function(event) {
   myModal2.hide(); // hide modal
   taskForm.reset();
   console.log('submited task')
-
-  //domManipulation.drawTasks(projectList, project)
+  domManipulation.drawTasks(taskProjectIndex)
 
 });
 
 projectForm.addEventListener('submit', function(event) {
   event.preventDefault();
 
-  
-
   const input = projectForm.querySelector("input")
   const project = new Project(input.value)
-  projectList.addProject(project)
-  console.log(projectList)
+  PROJECT_LIST.addProject(project)
+  console.log(PROJECT_LIST)
 
   myModal1.hide(); // hide modal
   projectForm.reset();
   console.log('submited project')
   
-  domManipulation.drawProjects(projectList)
-  domManipulation.drawProjectOptions(projectList)
+  domManipulation.drawProjects()
+  domManipulation.drawProjectOptions()
 
   
 });
+
+domManipulation.taskListEventListener()

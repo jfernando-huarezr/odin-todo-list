@@ -1,11 +1,13 @@
+import { PROJECT_LIST } from './projectStorage'
+
 export default class domManipulation {  
   
-  static drawProjects(list) {
+  static drawProjects() {
     const domProjects = document.querySelector('.projects ul')
 
     const fragment = document.createDocumentFragment()
 
-    const projectList = list.getList()
+    const projectList = PROJECT_LIST.getList()
 
     projectList.forEach((element, index) => {
       const project = document.createElement('li')
@@ -15,7 +17,8 @@ export default class domManipulation {
       project.addEventListener('click', (e) => {
         e.preventDefault()
 
-        this.drawTasks(projectList, index)
+        
+        this.drawTasks(index)
 
       })
 
@@ -26,11 +29,11 @@ export default class domManipulation {
     domProjects.appendChild(fragment)
   }
 
-  static drawProjectOptions(projectList) {
+  static drawProjectOptions() {
     const domProjectsOptions = document.querySelector('#task-form #projectSelect')
 
     const fragment = document.createDocumentFragment()
-    const list = projectList.getList()
+    const list = PROJECT_LIST.getList()
 
     list.forEach((element, index) => {
       const option = document.createElement('option')
@@ -45,11 +48,11 @@ export default class domManipulation {
   
   }
 
-  static drawTasks(projectList, projectIndex) {
+  static drawTasks(projectIndex) {
     const domTasksList = document.querySelector('main .tasks table tbody')
     const fragment = document.createDocumentFragment()
 
-    const taskList = projectList[projectIndex].taskList
+    const taskList = PROJECT_LIST.getList()[projectIndex].getTasks()
 
     taskList.forEach((element, index) => {
       const row = document.createElement('tr')
@@ -58,8 +61,8 @@ export default class domManipulation {
         <td>${element.name}</td>
         <td>${element.date}</td>
         <td>${element.importance}</td>
-        <td data-project="${projectIndex}" data-task="${index}">${element.status}</td>
-        <td data-project="${projectIndex}" data-task="${index}">
+        <td data-task="${index}">${element.status}</td>
+        <td data-task="${index}">
           <button class="btn-icon task-details" data-project="${projectIndex}" data-task="${index}"><i class="fa-solid fa-magnifying-glass"></i></button>
           <button class="btn-icon task-update ps-2" data-bs-toggle="modal" data-bs-target="#addTaskModal" data-project="${projectIndex}" data-task="${index}"><i  class="fa-solid fa-pen-to-square"></i></button>
           <button class="btn-icon task-delete ps-2" data-project="${projectIndex}" data-task="${index}"><i class="fa-solid fa-trash"></i></button>
@@ -71,8 +74,12 @@ export default class domManipulation {
 
     domTasksList.innerHTML = ""
     domTasksList.appendChild(fragment)
+  }
 
-    // Add event listener to the parent element
+  static taskListEventListener() {
+
+    const domTasksList = document.querySelector('main .tasks table tbody')
+
     domTasksList.addEventListener('click', (event) => {
       let targetElement = event.target;
 
@@ -85,31 +92,22 @@ export default class domManipulation {
 
       // Check if the clicked element is a 'button' tag
       if (targetElement.tagName.toLowerCase() === 'button') {
-        const projectIndex = targetElement.getAttribute('data-project');
         const taskIndex = targetElement.getAttribute('data-task');
+        const projectIndex = targetElement.getAttribute('data-project')
+
+        const currentProject = PROJECT_LIST.getList()[projectIndex]
+        console.log(currentProject)
 
         if (targetElement.classList.contains('task-details')) {
-          this.detailsTask(projectIndex, taskIndex);
+          
         } else if (targetElement.classList.contains('task-update')) {
-          this.updateTask(projectIndex, taskIndex);
+          
         } else if (targetElement.classList.contains('task-delete')) {
-          this.deleteTask(projectIndex, taskIndex);
+          currentProject.deleteTask(taskIndex)
+          this.drawTasks(projectIndex);
         }
       }
     });
-
-  }
-
-  static detailsTask(projectIndex, taskIndex) {
-    console.log(`detailsTask for project ${projectIndex} and task ${taskIndex}`)
-  }
-  
-  static updateTask(projectIndex, taskIndex) {
-    console.log(`updateTask for project ${projectIndex} and task ${taskIndex}`)
-  }
-  
-  static deleteTask(projectIndex, taskIndex) {
-    console.log(`deleteTask for project ${projectIndex} and task ${taskIndex}`)
   }
 
 }

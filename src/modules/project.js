@@ -8,12 +8,16 @@ export default class Project {
     this.taskList.push(task)
   }
 
-  deleteTask(task) {
-
+  deleteTask(index) {
+    this.taskList.splice(index, 1)
   }
 
-  searchTask(task) {
-    
+  searchTask(index) {
+    return this.taskList[index]
+  }
+
+  getTasks() {
+    return this.taskList
   }
 
 }
