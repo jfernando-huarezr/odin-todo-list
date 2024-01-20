@@ -20,4 +20,8 @@ export default class Project {
     return this.taskList
   }
 
+  getName() {
+    return this.name
+  }
+
 }

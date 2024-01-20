@@ -5,6 +5,13 @@ import domManipulation from './domManipulation'
 
 import { PROJECT_LIST } from './projectStorage'
 
+const defaultProject = new Project('Default')
+PROJECT_LIST.addProject(defaultProject)
+
+domManipulation.drawProjects()
+domManipulation.drawProjectOptions()
+domManipulation.drawTasks(0)
+
 const headerHeight = document.querySelector('header').offsetHeight
 const main = document.querySelector('main')
 const mainRow = document.querySelector('main .container .row')

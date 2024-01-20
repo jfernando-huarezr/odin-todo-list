@@ -50,14 +50,17 @@ export default class domManipulation {
 
   static drawTasks(projectIndex) {
     const domTasksList = document.querySelector('main .tasks table tbody')
-    const fragment = document.createDocumentFragment()
+    const domTasksListTitle = document.querySelector('main .tasks h3')
 
-    const taskList = PROJECT_LIST.getList()[projectIndex].getTasks()
+
+    const fragment = document.createDocumentFragment()
+    const currentProject = PROJECT_LIST.getList()[projectIndex]
+    const taskList = currentProject.getTasks()
+    domTasksListTitle.textContent = `${currentProject.getName()} tasks (${taskList.length}): `
 
     taskList.forEach((element, index) => {
       const row = document.createElement('tr')
       row.innerHTML = `
-        <th scope="row">${index+1}</th>
         <td class="taskName" style="text-decoration-line: ${element.status ? "line-through" : "none"}">${element.name}</td>
         <td class="taskDate">${element.date}</td>
         <td class="taskImportance">${element.importance}</td>
