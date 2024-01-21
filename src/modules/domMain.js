@@ -97,12 +97,14 @@ taskForm.addEventListener('submit', function(event) {
   
 
   domManipulation.clearDomTasks()
+  console.log(currentShowing)
 
-  if (currentShowing == 'all ') {
+  if (currentShowing == 'all') {
 
     domManipulation.showAllTasks()
-    
+
   }  else {
+
     domManipulation.changeTasksTitle(projectIndex)
     domManipulation.drawTasks(projectIndex)
   } 
@@ -161,6 +163,9 @@ addTaskModal.addEventListener('show.bs.modal', (e) => {
 
 
 showAllTasks.addEventListener('click', (e) => {
+
+  e.preventDefault()
+
   domManipulation.clearDomTasks()
   domManipulation.showAllTasks()  
 })

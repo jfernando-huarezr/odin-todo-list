@@ -18,10 +18,7 @@ export default class domManipulation {
 
       project.addEventListener('click', (e) => {
         e.preventDefault()
-        project.parentElement.dataset.project = index
-
         const domTasksListTitle = document.querySelector('main .tasks h3')
-        
 
         const taskList = element.getTasks()
         domTasksListTitle.textContent = `${element.getName()} tasks (${taskList.length}): `
@@ -60,6 +57,7 @@ export default class domManipulation {
 
   static drawTasks(projectIndex) {
     const domTasksList = document.querySelector('main .tasks table tbody')
+    domTasksList.setAttribute('data-project', projectIndex)
 
     const fragment = document.createDocumentFragment()
     const currentProject = PROJECT_LIST.getList()[projectIndex]
@@ -88,7 +86,6 @@ export default class domManipulation {
   static taskListEventListener() {
 
     const domTasksList = document.querySelector('main .tasks table tbody')
-    const currentShowing = domTasksList.getAttribute('data-project')
 
     domTasksList.addEventListener('click', (event) => {
       let targetElement = event.target;
@@ -105,7 +102,6 @@ export default class domManipulation {
 
         const taskIndex = targetElement.getAttribute('data-task');
         const projectIndex = targetElement.getAttribute('data-project')
-
         const currentProject = PROJECT_LIST.searchProject(projectIndex)
         console.log(currentProject)
 
@@ -137,7 +133,7 @@ export default class domManipulation {
 
           this.clearDomTasks()
 
-          (currentShowing == 'all ') ? this.showAllTasks() : this.drawTasks(projectIndex);
+          (currentShowing == 'all') ? this.showAllTasks() : this.drawTasks(projectIndex);
           
         }
 
@@ -147,30 +143,32 @@ export default class domManipulation {
       if (targetElement.tagName.toLowerCase() === 'td') {
         if (targetElement.classList.contains('taskStatus')) {
 
+          const currentShowing = domTasksList.getAttribute('data-project')
           const taskIndex = targetElement.getAttribute('data-task');
           const projectIndex = targetElement.getAttribute('data-project')
           const currentProject = PROJECT_LIST.getList()[projectIndex]
           const task = currentProject.getTasks()[taskIndex]
           task.setStatus()
 
-          this.clearDomTasks()
-          (currentShowing == 'all ') ? this.showAllTasks() : this.drawTasks(projectIndex);      
+          this.clearDomTasks();
+          (currentShowing == 'all') ? this.showAllTasks() : this.drawTasks(projectIndex);      
         }
       }
     });
   }
 
   static showAllTasks() {
-    const domTasksListTitle = document.querySelector('main .tasks h3')
-    const domTasksList = document.querySelector('main .tasks table tbody')
-    domTasksListTitle.textContent = "All Tasks"
-    domTasksList.setAttribute('data-project', 'all')
-
+    
     const listOfProjects = PROJECT_LIST.getList()
 
     listOfProjects.forEach((element, index) => {
       this.drawTasks(index)
     })
+
+    const domTasksListTitle = document.querySelector('main .tasks h3')
+    const domTasksList = document.querySelector('main .tasks table tbody')
+    domTasksListTitle.textContent = "All Tasks"
+    domTasksList.setAttribute('data-project', 'all')
   }
 
   static clearDomTasks() {
