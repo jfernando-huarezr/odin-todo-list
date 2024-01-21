@@ -19,4 +19,8 @@ export default class ProjectList {
     return this.projectList
   }
 
+  getListLength() {
+    return this.projectList.length
+  }
+
 }

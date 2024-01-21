@@ -22,18 +22,19 @@
     <div class="container">
       <div class="row pt-2">
         <div class="projects col-4">
-          <h3>Projects</h3>
+          <button id="showAllTasks" type="button" class="btn btn-info">All Tasks</button>
+          <h5 class="pt-3">Projects</h5>
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProjectModal">
             +Project
           </button>
-          <ul class="pt-3">
+          <ul class="pt-3" data-project="0">
 
           </ul>
 
           
         </div>
         <div class="tasks col-8">
-          <h3>Tasks</h3>
+          <h3></h3>
           <table class="table">
             <thead>
               <tr>
@@ -73,7 +74,7 @@
 
             <div class="mb-3">
               <label for="taskDate" class="form-label">Task date</label>
-              <input required type="text" class="form-control" id="taskDate">
+              <input required type="date" class="form-control" id="taskDate">
             </div>
 
             <div class="mb-3">

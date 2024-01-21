@@ -12,12 +12,22 @@ export default class domManipulation {
     projectList.forEach((element, index) => {
       const project = document.createElement('li')
       project.textContent = element.name
-      project.dataset.position === index
+      project.dataset.position = index
+      
+      
 
       project.addEventListener('click', (e) => {
         e.preventDefault()
+        project.parentElement.dataset.project = index
 
+        const domTasksListTitle = document.querySelector('main .tasks h3')
         
+
+        const taskList = element.getTasks()
+        domTasksListTitle.textContent = `${element.getName()} tasks (${taskList.length}): `
+        
+        this.clearDomTasks()
+
         this.drawTasks(index)
 
       })
@@ -50,13 +60,10 @@ export default class domManipulation {
 
   static drawTasks(projectIndex) {
     const domTasksList = document.querySelector('main .tasks table tbody')
-    const domTasksListTitle = document.querySelector('main .tasks h3')
-
 
     const fragment = document.createDocumentFragment()
     const currentProject = PROJECT_LIST.getList()[projectIndex]
     const taskList = currentProject.getTasks()
-    domTasksListTitle.textContent = `${currentProject.getName()} tasks (${taskList.length}): `
 
     taskList.forEach((element, index) => {
       const row = document.createElement('tr')
@@ -75,13 +82,13 @@ export default class domManipulation {
       fragment.appendChild(row)
     })
 
-    domTasksList.innerHTML = ""
     domTasksList.appendChild(fragment)
   }
 
   static taskListEventListener() {
 
     const domTasksList = document.querySelector('main .tasks table tbody')
+    const currentShowing = domTasksList.getAttribute('data-project')
 
     domTasksList.addEventListener('click', (event) => {
       let targetElement = event.target;
@@ -95,10 +102,11 @@ export default class domManipulation {
 
       // Check if the clicked element is a 'button' tag
       if (targetElement.tagName.toLowerCase() === 'button') {
+
         const taskIndex = targetElement.getAttribute('data-task');
         const projectIndex = targetElement.getAttribute('data-project')
 
-        const currentProject = PROJECT_LIST.getList()[projectIndex]
+        const currentProject = PROJECT_LIST.searchProject(projectIndex)
         console.log(currentProject)
 
         if (targetElement.classList.contains('task-details')) {
@@ -126,7 +134,11 @@ export default class domManipulation {
         
         else if (targetElement.classList.contains('task-delete')) {
           currentProject.deleteTask(taskIndex)
-          this.drawTasks(projectIndex);
+
+          this.clearDomTasks()
+
+          (currentShowing == 'all ') ? this.showAllTasks() : this.drawTasks(projectIndex);
+          
         }
 
         return
@@ -140,10 +152,36 @@ export default class domManipulation {
           const currentProject = PROJECT_LIST.getList()[projectIndex]
           const task = currentProject.getTasks()[taskIndex]
           task.setStatus()
-          this.drawTasks(projectIndex)       
+
+          this.clearDomTasks()
+          (currentShowing == 'all ') ? this.showAllTasks() : this.drawTasks(projectIndex);      
         }
       }
     });
+  }
+
+  static showAllTasks() {
+    const domTasksListTitle = document.querySelector('main .tasks h3')
+    const domTasksList = document.querySelector('main .tasks table tbody')
+    domTasksListTitle.textContent = "All Tasks"
+    domTasksList.setAttribute('data-project', 'all')
+
+    const listOfProjects = PROJECT_LIST.getList()
+
+    listOfProjects.forEach((element, index) => {
+      this.drawTasks(index)
+    })
+  }
+
+  static clearDomTasks() {
+    const domTasksList = document.querySelector('main .tasks table tbody')
+    domTasksList.innerHTML = ""
+  }
+
+  static changeTasksTitle(projectIndex) {
+    const domTasksListTitle = document.querySelector('main .tasks h3')
+    domTasksListTitle.textContent = `${PROJECT_LIST.searchProject(projectIndex).getName()} tasks (${PROJECT_LIST.searchProject(projectIndex).getTasks().length}): `
+    domTasksListTitle.setAttribute('data-project', projectIndex)
   }
 
 }

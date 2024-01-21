@@ -10,7 +10,7 @@ PROJECT_LIST.addProject(defaultProject)
 
 domManipulation.drawProjects()
 domManipulation.drawProjectOptions()
-domManipulation.drawTasks(0)
+domManipulation.showAllTasks()
 
 const headerHeight = document.querySelector('header').offsetHeight
 const main = document.querySelector('main')
@@ -22,6 +22,7 @@ main.classList.add('d-flex', 'align-items-center')
 
 const taskForm = document.getElementById('task-form')
 const projectForm = document.getElementById('project-form')
+const showAllTasks = document.getElementById('showAllTasks')
 
 
 const addTaskModal = document.getElementById('addTaskModal')
@@ -52,11 +53,15 @@ taskForm.addEventListener('submit', function(event) {
   const submitButton = taskForm.querySelector('#send-task')
   console.log(submitButton.textContent)
 
+  const domTasksList = document.querySelector('main .tasks table tbody')
+  const currentShowing = domTasksList.getAttribute('data-project')
+  console.log(currentShowing)
+
   let taskName = ""
   let taskDescription = ""
   let taskDate = ""
   const taskImportance = taskForm.querySelector("select#taskImportance option:checked").value
-  const taskProjectIndex = taskForm.querySelector("select#projectSelect option:checked" ).value
+  const projectIndex = taskForm.querySelector("select#projectSelect option:checked" ).value
 
   inputs.forEach(element => {
     switch (element.id) {
@@ -66,7 +71,7 @@ taskForm.addEventListener('submit', function(event) {
     }
   })
 
-  const project = PROJECT_LIST.searchProject(taskProjectIndex)
+  const project = PROJECT_LIST.searchProject(projectIndex)
 
   if (submitButton.textContent === 'Add') {
     const task = new Task(taskName, taskDescription, taskDate, taskImportance)
@@ -88,7 +93,19 @@ taskForm.addEventListener('submit', function(event) {
   taskModal.hide(); // hide modal
   taskForm.reset();
   console.log('submited task')
-  domManipulation.drawTasks(taskProjectIndex)
+
+  
+
+  domManipulation.clearDomTasks()
+
+  if (currentShowing == 'all ') {
+
+    domManipulation.showAllTasks()
+    
+  }  else {
+    domManipulation.changeTasksTitle(projectIndex)
+    domManipulation.drawTasks(projectIndex)
+  } 
 
 });
 
@@ -105,6 +122,10 @@ projectForm.addEventListener('submit', function(event) {
   
   domManipulation.drawProjects()
   domManipulation.drawProjectOptions()
+
+  domManipulation.changeTasksTitle(PROJECT_LIST.getListLength()-1)
+  domManipulation.clearDomTasks()
+  domManipulation.drawTasks(PROJECT_LIST.getListLength()-1)
 
   
 });
@@ -136,6 +157,12 @@ addTaskModal.addEventListener('show.bs.modal', (e) => {
     project.style.display = 'none'
   }
 
+})
+
+
+showAllTasks.addEventListener('click', (e) => {
+  domManipulation.clearDomTasks()
+  domManipulation.showAllTasks()  
 })
 
 domManipulation.taskListEventListener()
