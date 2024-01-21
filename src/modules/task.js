@@ -1,10 +1,10 @@
 export default class Task {
-  constructor(name, description, date, importance) {
+  constructor(name, description, date, importance, status=false) {
     this.name = name,
     this.description = description,
     this.date = date,
     this.importance = importance,
-    this.status = false
+    this.status = status
   }
 
   setName(name) {

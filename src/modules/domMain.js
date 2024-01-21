@@ -2,11 +2,9 @@ import * as bootstrap from 'bootstrap'
 import Project from './project'
 import Task from './task'
 import domManipulation from './domManipulation'
+import * as StorageManager from "./localStorageManager";
 
 import { PROJECT_LIST } from './projectStorage'
-
-const defaultProject = new Project('Default')
-PROJECT_LIST.addProject(defaultProject)
 
 domManipulation.drawProjects()
 domManipulation.drawProjectOptions()
@@ -31,8 +29,6 @@ const addProjectModal = document.getElementById('addProjectModal')
 //bootstrap modal so i can close them after hitting submit
 const projectModal = new bootstrap.Modal(document.getElementById('addProjectModal'), {}); // creating modal object
 const taskModal = new bootstrap.Modal(document.getElementById('addTaskModal'), {}); // creating modal object
-
-//to store all the projects
 
 
 addTaskModal.addEventListener('hidden.bs.modal', function () {
@@ -71,11 +67,13 @@ taskForm.addEventListener('submit', function(event) {
     }
   })
 
-  const project = PROJECT_LIST.searchProject(projectIndex)
+  const project = PROJECT_LIST[projectIndex]
 
   if (submitButton.textContent === 'Add') {
     const task = new Task(taskName, taskDescription, taskDate, taskImportance)
     project.addTask(task)
+
+    StorageManager.saveToLocalStorage('projectList', PROJECT_LIST);
   }
 
   else {
@@ -86,6 +84,8 @@ taskForm.addEventListener('submit', function(event) {
     currentTask.setDescription(taskDescription)
     currentTask.setDate(taskDate)
     currentTask.setImportance(taskImportance)
+
+    StorageManager.saveToLocalStorage('projectList', PROJECT_LIST);
   }
   
 
@@ -116,7 +116,9 @@ projectForm.addEventListener('submit', function(event) {
 
   const input = projectForm.querySelector("input")
   const project = new Project(input.value)
-  PROJECT_LIST.addProject(project)
+  PROJECT_LIST.push(project)
+
+  StorageManager.saveToLocalStorage('projectList', PROJECT_LIST);
 
   projectModal.hide(); // hide modal
   projectForm.reset();
@@ -125,9 +127,9 @@ projectForm.addEventListener('submit', function(event) {
   domManipulation.drawProjects()
   domManipulation.drawProjectOptions()
 
-  domManipulation.changeTasksTitle(PROJECT_LIST.getListLength()-1)
+  domManipulation.changeTasksTitle(PROJECT_LIST.length-1)
   domManipulation.clearDomTasks()
-  domManipulation.drawTasks(PROJECT_LIST.getListLength()-1)
+  domManipulation.drawTasks(PROJECT_LIST.length-1)
 
   
 });

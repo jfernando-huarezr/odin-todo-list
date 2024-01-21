@@ -1,4 +1,5 @@
 import { PROJECT_LIST } from './projectStorage'
+import * as StorageManager from "./localStorageManager";
 
 export default class domManipulation {  
   
@@ -7,11 +8,10 @@ export default class domManipulation {
 
     const fragment = document.createDocumentFragment()
 
-    const projectList = PROJECT_LIST.getList()
 
-    projectList.forEach((element, index) => {
+    PROJECT_LIST.forEach((currentProject, index) => {
       const project = document.createElement('li')
-      project.textContent = element.name
+      project.textContent = currentProject.name
       project.dataset.position = index
       
       
@@ -20,8 +20,8 @@ export default class domManipulation {
         e.preventDefault()
         const domTasksListTitle = document.querySelector('main .tasks h3')
 
-        const taskList = element.getTasks()
-        domTasksListTitle.textContent = `${element.getName()} tasks (${taskList.length}): `
+        const taskList = currentProject.getTasks()
+        domTasksListTitle.textContent = `${currentProject.getName()} tasks (${taskList.length}): `
         
         this.clearDomTasks()
 
@@ -40,9 +40,8 @@ export default class domManipulation {
     const domProjectsOptions = document.querySelector('#task-form #projectSelect')
 
     const fragment = document.createDocumentFragment()
-    const list = PROJECT_LIST.getList()
 
-    list.forEach((element, index) => {
+    PROJECT_LIST.forEach((element, index) => {
       const option = document.createElement('option')
       option.textContent = element.name
       option.value = index
@@ -60,7 +59,7 @@ export default class domManipulation {
     domTasksList.setAttribute('data-project', projectIndex)
 
     const fragment = document.createDocumentFragment()
-    const currentProject = PROJECT_LIST.getList()[projectIndex]
+    const currentProject = PROJECT_LIST[projectIndex]
     const taskList = currentProject.getTasks()
 
     taskList.forEach((element, index) => {
@@ -102,7 +101,7 @@ export default class domManipulation {
 
         const taskIndex = targetElement.getAttribute('data-task');
         const projectIndex = targetElement.getAttribute('data-project')
-        const currentProject = PROJECT_LIST.searchProject(projectIndex)
+        const currentProject = PROJECT_LIST[projectIndex]
         console.log(currentProject)
 
         if (targetElement.classList.contains('task-details')) {
@@ -131,9 +130,11 @@ export default class domManipulation {
         else if (targetElement.classList.contains('task-delete')) {
           currentProject.deleteTask(taskIndex)
 
-          this.clearDomTasks()
+          StorageManager.saveToLocalStorage('projectList', PROJECT_LIST);
+          const currentShowing = domTasksList.getAttribute('data-project');
 
-          (currentShowing == 'all') ? this.showAllTasks() : this.drawTasks(projectIndex);
+          this.clearDomTasks();
+          (currentShowing == 'all') ? this.showAllTasks() : this.drawTasks(projectIndex);  
           
         }
 
@@ -146,9 +147,11 @@ export default class domManipulation {
           const currentShowing = domTasksList.getAttribute('data-project')
           const taskIndex = targetElement.getAttribute('data-task');
           const projectIndex = targetElement.getAttribute('data-project')
-          const currentProject = PROJECT_LIST.getList()[projectIndex]
+          const currentProject = PROJECT_LIST[projectIndex]
           const task = currentProject.getTasks()[taskIndex]
           task.setStatus()
+
+          StorageManager.saveToLocalStorage('projectList', PROJECT_LIST);
 
           this.clearDomTasks();
           (currentShowing == 'all') ? this.showAllTasks() : this.drawTasks(projectIndex);      
@@ -158,10 +161,8 @@ export default class domManipulation {
   }
 
   static showAllTasks() {
-    
-    const listOfProjects = PROJECT_LIST.getList()
 
-    listOfProjects.forEach((element, index) => {
+    PROJECT_LIST.forEach((element, index) => {
       this.drawTasks(index)
     })
 
@@ -178,7 +179,7 @@ export default class domManipulation {
 
   static changeTasksTitle(projectIndex) {
     const domTasksListTitle = document.querySelector('main .tasks h3')
-    domTasksListTitle.textContent = `${PROJECT_LIST.searchProject(projectIndex).getName()} tasks (${PROJECT_LIST.searchProject(projectIndex).getTasks().length}): `
+    domTasksListTitle.textContent = `${PROJECT_LIST[projectIndex].getName()} tasks (${PROJECT_LIST[projectIndex].getTasks().length}): `
     domTasksListTitle.setAttribute('data-project', projectIndex)
   }
 
