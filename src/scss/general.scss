@@ -32,9 +32,22 @@ body {
           border-right: 1px solid black;
           background-color: #F7E6C4;
 
-          li:hover {
-            cursor: pointer;
+          li {
+
+            p:hover {
+              cursor: pointer;
+            }
+
+            button {
+              display: none;
+            }
+            
           }
+
+          li:hover button {
+              display: block;   
+          }
+          
         }
 
         .tasks {
